@@ -40,23 +40,14 @@ object NSequence {
     fun removNb(n: Long): Array<LongArray> {
         val list = mutableListOf<Long>()
         val totalSum = ((n * (n + 1)) / 2)
-        var start = System.currentTimeMillis()
         for (first in n downTo n / 2) {
-            if (first * first < totalSum)
-                break
-            for (second in n / 2 until n) {
-                if (first * second == totalSum - first - second) {
-                    list.add(second)
-                    list.add(first)
-                }
+            val second = (totalSum - first) / (first + 1)
+            if (first * second == totalSum - first - second) {
+                list.add(second)
+                list.add(first)
             }
         }
-        var finish = System.currentTimeMillis() - start
-        println("total time search - $finish")
-
-
-        start = System.currentTimeMillis()
-        val array = Array(list.size) {
+        val array = Array(list.size / 2) {
             LongArray(2)
         }
         var newArr1 = LongArray(2)
@@ -72,11 +63,6 @@ object NSequence {
                 secondCounter = 0
             }
         }
-        for ((newCounter, i) in (counter until array.size).withIndex()) {
-            array[i] = array[newCounter].reversedArray()
-        }
-        finish = System.currentTimeMillis() - start
-        println("total time array - $finish")
 
         return if (array.isEmpty()) emptyArray() else array
     }
@@ -93,3 +79,11 @@ fun main(args: Array<String>) {
         println()
     }
 }
+
+// Best solution
+//fun removNb(n: Long) = (1..n).fold(ArrayList<LongArray>()) { result, a ->
+//    val sum = (n * (n + 1)) / 2
+//    val b = (sum - a) / (a + 1)
+//    if (sum - b - a == b * a && b <= n) result.add(arrayOf(a, b).toLongArray())
+//    result
+//}.toTypedArray()
