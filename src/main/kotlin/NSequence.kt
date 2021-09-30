@@ -66,6 +66,8 @@ object NSequence {
 
         return if (array.isEmpty()) emptyArray() else array
     }
+
+    fun sum(a: Int, b:  Int) = a + b
 }
 
 fun main(args: Array<String>) {
