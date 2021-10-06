@@ -24,8 +24,8 @@ object RangeExtraction {
         var finalString = ""
         var rangeString = ""
         var isNext = false
-        arr.forEachIndexed { index, i ->
 
+        arr.forEachIndexed { index, i ->
             if (i <= 1) {
                 val nextIndex: Int = try {
                     arr[index + 1]
@@ -44,6 +44,12 @@ object RangeExtraction {
                         finalString = finalString.plus(rangeString)
                         rangeString = ""
                         listOfRangedNumbers = mutableListOf()
+                    } else {
+                        listOfRangedNumbers.forEach {
+                            finalString = finalString.plus("$it,")
+
+                        }
+                        listOfRangedNumbers = mutableListOf()
                     }
                 }
             }
@@ -53,7 +59,7 @@ object RangeExtraction {
                 } catch (e: Exception) {
                     0
                 }
-                if (i == nextIndex + 1) {
+                if (i == nextIndex - 1) {
                     isNext = true
                     listOfRangedNumbers.add(i)
                 } else {
@@ -65,6 +71,12 @@ object RangeExtraction {
                         finalString = finalString.plus(rangeString)
                         rangeString = ""
                         listOfRangedNumbers = mutableListOf()
+                    } else {
+                        listOfRangedNumbers.forEach {
+                            finalString = finalString.plus("$it,")
+
+                        }
+                        listOfRangedNumbers = mutableListOf()
                     }
                 }
             }
@@ -72,8 +84,9 @@ object RangeExtraction {
                 finalString = finalString.plus("$i,")
             }
         }
+        finalString = finalString.dropLast(1)
         println(finalString)
-        return ""
+        return finalString
     }
 
 }
@@ -82,4 +95,20 @@ object RangeExtraction {
 fun main(args: Array<String>) {
     val array = intArrayOf(-6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20)
     RangeExtraction.rangeExtraction(array)
+}
+
+//best solution
+
+fun rangeExtraction(
+    arr: IntArray
+): String = arr.fold(emptyList<Pair<Int, Int>>())
+{ rs, x ->
+    rs.lastOrNull().run {
+        if (this != null && x - second == 1)
+            rs.dropLast(1) + (first to x)
+        else rs + (x to x)
+    }
+}.joinToString(",")
+{ (x, y) ->
+    if (y - x > 1) "$x-$y" else (x..y).joinToString(",")
 }
